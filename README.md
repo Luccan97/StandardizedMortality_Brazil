@@ -1,4 +1,3 @@
-# Taxa de mortalidade padronizada por faixa etária e sexo, Brasi.
 
 
 ### O que é?
