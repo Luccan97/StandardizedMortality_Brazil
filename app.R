@@ -14,6 +14,7 @@ library(tidyverse)
 library(plotly)
 library(ggrepel)
 library(shiny.i18n)
+
 load("C:/projetos/BrazilMortalityRate/data.RData")
 
 # i18n <- Translator$new(translation_json_path='translations/translation.json')
@@ -39,7 +40,7 @@ ui <- fluidPage(
   
   tags$head(
     tags$style(HTML(
-      '#tag1 {color: #c1946a; 
+      '#tag1 {color: white; 
                   background-color:#405d27;
                   border:2px solid #c1946a;
                   border-radius: 15px 50px 30px;
@@ -112,7 +113,7 @@ ui <- fluidPage(
                    Para criar um mapa específico:
                    Selecione um ano, o tipo de taxa (padronizada ou bruta) e o capítulo do CID-10 de interesse."),
           selectInput("year",
-                      "Ano:",
+                      "Ano:", selected = "2019",
                       choices = c('2010','2011','2012','2013','2014','2015','2016','2017','2018','2019')),
           selectInput("taxa",
                       "Taxa:",
@@ -133,7 +134,7 @@ ui <- fluidPage(
                      plotOutput("map1", width = "100%", height = "900px")),
             tabPanel("Dados", tableOutput("table1")),
             tabPanel("README", 
-                     includeMarkdown("Hello World"))
+                     includeMarkdown("README.md"))
           )
         )
     ))
