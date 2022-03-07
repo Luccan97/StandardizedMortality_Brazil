@@ -28,6 +28,11 @@ Para construção dos denominadores das taxas de mortalidade utilizou-se as proj
 Nesse repositório estão disponibilizados os scripts 
 * 00_prepareData.R que faz a leitura e limpeza das bases utilizadas
 * App.R arquivo que constrói a interface de usuário e o servidor do dashboard Shiny.
+
+By : Lucca Nielsen
+meu [GitHub](https://github.com/Luccan97)
+meu [Linkedin](https://www.linkedin.com/in/lucca-nielsen-53b2a9181/)
+
 # Referências
 
 SALDANHA, Raphael de Freitas; BASTOS, Ronaldo Rocha; BARCELLOS, Christovam. Microdatasus: pacote para download e pré-processamento de microdados do Departamento de Informática do SUS (DATASUS). Cad. Saúde Pública, Rio de Janeiro , v. 35, n. 9, e00032419, 2019 . Available from http://ref.scielo.org/dhcq3y.
