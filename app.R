@@ -212,7 +212,10 @@ server <- function(input, output) {
     )
   
   output$table1 <- renderTable({
-    mortality_ds_rate_phe()
+    mortality_ds_rate_phe() %>%
+      rename(Obitos = 'total_count',
+             Populacao = 'total_pop') %>%
+      select(c(UF,Obitos,Populacao,Bruta,Padronizada))
   })
   
   map <- reactive(
