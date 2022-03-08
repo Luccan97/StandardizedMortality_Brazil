@@ -149,4 +149,5 @@ rm(list=setdiff(ls(), c("obts_clean", "pop_t_clean", "standard_pop_clean", "UF_s
 write.csv(obts_clean, "obts_clean.csv",row.names = F)
 write.csv(standard_pop_clean, "standard_pop_clean.csv",row.names = F)
 write.csv(pop_t_clean, "pop_t_clean.csv",row.names = F)
-write_sf(UF_shp, "UF_shp.shp")
+#write_sf(UF_shp, "UF_shp.shp")
+saveRDS(UF_shp, "UF_shp.RDS")
