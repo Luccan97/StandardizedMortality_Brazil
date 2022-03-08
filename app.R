@@ -11,12 +11,21 @@ library(shinydashboardPlus)
 library(shinyWidgets)
 library(leaflet)
 library(tidyverse)
-library(plotly)
+library(sf)
 library(ggrepel)
-library(shiny.i18n)
 
-load("C:/projetos/BrazilMortalityRate/data.RData")
 
+
+obts_clean <- read_csv("obts_clean.csv", 
+                       col_types = cols(Sex = col_character()), 
+                       locale = locale(encoding = "ISO-8859-1"))
+
+UF_shp <- read_sf("UF_shp.shp")
+
+
+pop_t_clean <- read_csv("pop_t_clean.csv")
+
+standard_pop_clean <- read_csv("standard_pop_clean.csv")
 # i18n <- Translator$new(translation_json_path='translations/translation.json')
 # i18n$set_translation_language('en')
 

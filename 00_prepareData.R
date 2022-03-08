@@ -73,15 +73,15 @@ obts <- dados %>%
 
 obts_clean <- obts %>%
   mutate(ICD_chapter = case_when(
-    ICD1 == "A" | ICD1 == "B" ~ "1.Algumas doenças infecciosas e parasitárias",
-    ICD1 == "C" | (ICD1 == "D" & ICD2 <5) ~ "2.Neoplasias (tumores)",
-    ICD1 == "D" & ICD2 >=5 ~ "3.Doenças do sangue e dos órgãos hematopoiéticos",
-    ICD1 == "E" ~ "4.Doenças endócrinas nutricionais e metabólicas",
-    ICD1 == "F" ~ "5.Transtornos mentais e comportamentais",
-    ICD1 == "G" ~ "6.Doenças do sistema nervoso",
-    ICD1 == "H" & ICD2 <6 ~"7.Doenças do olho e anexos",
-    ICD1 == "H" & ICD2 >=6 ~ "8.Doenças do ouvido e da apófise mastóide",
-    ICD1 == "I" ~ "9.Doenças do aparelho circulatório",
+    ICD1 == "A" | ICD1 == "B" ~ "01.Algumas doenças infecciosas e parasitárias",
+    ICD1 == "C" | (ICD1 == "D" & ICD2 <5) ~ "02.Neoplasias (tumores)",
+    ICD1 == "D" & ICD2 >=5 ~ "03.Doenças do sangue e dos órgãos hematopoiéticos",
+    ICD1 == "E" ~ "04.Doenças endócrinas nutricionais e metabólicas",
+    ICD1 == "F" ~ "05.Transtornos mentais e comportamentais",
+    ICD1 == "G" ~ "06.Doenças do sistema nervoso",
+    ICD1 == "H" & ICD2 <6 ~"07.Doenças do olho e anexos",
+    ICD1 == "H" & ICD2 >=6 ~ "08.Doenças do ouvido e da apófise mastóide",
+    ICD1 == "I" ~ "09.Doenças do aparelho circulatório",
     ICD1 == "J" ~ "10.Doenças do aparelho respiratório",
     ICD1 == "K" ~ "11.Doenças do aparelho digestivo",
     ICD1 == "L" ~ "12.Doenças da pele e do tecido subcutâneo",
@@ -146,5 +146,7 @@ UF_shp <- read_sf("data/BR_UF_2020.shp") %>%
 # Manter apenas as bases limpas e salvar em RData.
 rm(list=setdiff(ls(), c("obts_clean", "pop_t_clean", "standard_pop_clean", "UF_shp")))
 
-save(obts_clean, pop_t_clean, standard_pop_clean,UF_shp, file = "data.RData")
-
+write.csv(obts_clean, "obts_clean.csv",row.names = F)
+write.csv(standard_pop_clean, "standard_pop_clean.csv",row.names = F)
+write.csv(pop_t_clean, "pop_t_clean.csv",row.names = F)
+write_sf(UF_shp, "UF_shp.shp")
