@@ -146,8 +146,8 @@ UF_shp <- read_sf("data/BR_UF_2020.shp") %>%
 # Manter apenas as bases limpas e salvar em RData.
 rm(list=setdiff(ls(), c("obts_clean", "pop_t_clean", "standard_pop_clean", "UF_shp")))
 
-write.csv(obts_clean, "obts_clean.csv",row.names = F)
-write.csv(standard_pop_clean, "standard_pop_clean.csv",row.names = F)
-write.csv(pop_t_clean, "pop_t_clean.csv",row.names = F)
+write.csv(obts_clean, "dara/obts_clean.csv",row.names = F)
+write.csv(standard_pop_clean, "data/standard_pop_clean.csv",row.names = F)
+write.csv(pop_t_clean, "data/pop_t_clean.csv",row.names = F)
 #write_sf(UF_shp, "UF_shp.shp")
 saveRDS(UF_shp, "UF_shp.RDS")

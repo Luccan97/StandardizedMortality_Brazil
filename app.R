@@ -14,28 +14,7 @@ library(tidyverse)
 library(sf)
 library(ggrepel)
 
-get_shapefile <- function(path){
-  dest_dir = tempdir()
   
-  if(grepl('http',path)){
-    dest <- tempfile(tmpdir=dest_dir)
-    utils::download.file(url, path, quiet=T)
-    path <- dest
-  }
-  
-  if(grepl('.tgz$|.tar.gz$',path)){
-    utils::untar(path, exdir = dest_dir)
-  } else if(grepl('.zip$',path)){
-    utils::unzip(path, exdir = dest_dir)
-  } else{
-    stop('Unsupported filetype')
-  }
-  
-  shape_name = grep('.shp',list.files(dest_dir),value=T)
-  setwd(dest_dir)
-  sf::st_read(shape_name,quiet=TRUE) 
-}
-
 
 obts_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/obts_clean.csv", 
                        col_types = cols(Sex = col_character()), 
@@ -50,6 +29,7 @@ UF_shp <- readRDS("UF_shp.rds")
 pop_t_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/pop_t_clean.csv")
 
 standard_pop_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/standard_pop_clean.csv")
+
 # i18n <- Translator$new(translation_json_path='translations/translation.json')
 # i18n$set_translation_language('en')
 
