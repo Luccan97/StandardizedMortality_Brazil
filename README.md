@@ -1,6 +1,8 @@
 
 
 ### O que é?
+Link do dash : https://6c6yvn-lucca0nielsen.shinyapps.io/StandardizedMortality_Brazil/
+
 O dashboard oferece uma vizualização interativa da distribuição espacial nas Unidades Federativas do Brasil das taxas de mortalidade padronizadas por sexo e feixa etária
 de acordo com as causas básicas agrupadas nos capítulos do CID-10.
 
