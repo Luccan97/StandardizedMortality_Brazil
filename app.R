@@ -6,6 +6,7 @@
 #
 #    http://shiny.rstudio.com/
 
+
 library(shiny)
 library(shinydashboardPlus)
 library(shinyWidgets)
@@ -13,7 +14,7 @@ library(leaflet)
 library(tidyverse)
 library(sf)
 library(ggrepel)
-
+library(bslib)
   
 
 obts_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/obts_clean.csv", 
@@ -35,6 +36,7 @@ standard_pop_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/Stand
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  theme = bs_theme(bootswatch = 'yeti'),
   
   # shiny.i18n::usei18n(i18n),
   # tags$div(
@@ -47,13 +49,13 @@ ui <- fluidPage(
   #   )),
   ## Stlysh CSS
   
-  h1(id="tag1", "Dados abertos <> Conhecimento livre <> Saúde Pública."),
+  h1(id="tag1", "Open data <> Free knowledge <> Public Health."),
   
-  h1(id="tag2", "Taxa de mortalidade padronizada por sexo e faixa etária nos Estados do Brasil (2010-2019)."),
-  
+  h1(id="tag2", "Standardized mortality rate by sex and age group in the States of Brazil (2010-2019)."),
+
   tags$head(
     tags$style(HTML(
-      '#tag1 {color: white; 
+      '#tag1 {color: white;
                   background-color:#405d27;
                   border:2px solid #c1946a;
                   border-radius: 15px 50px 30px;
@@ -62,10 +64,10 @@ ui <- fluidPage(
                   text-align:right;
                   padding-top:10px;
                   padding-bottom:10px;
-                  font-family:"Monaco",Georgia,Serif;
+                  
                   }
-    #tag2 {color: #405d27; 
-                  background-color: white;
+    #tag2 {color: #c1946a;
+                  background-color: #405d27;
                   border-radius: 15px 50px 30px;
                   border:2px solid #c1946a;
                   font-size: 25px;
@@ -73,79 +75,74 @@ ui <- fluidPage(
                   text-align:center;
                   padding-top:10px;
                   padding-bottom:10px;
-                  font-family:"Monaco",Georgia,Serif;
+                 
     }
-    .tabbable > .nav > li > a[data-value="Mapa"] 
-      {background-color: #405d27; 
+    .tabbable > .nav > li > a[data-value="Mapa"]
+      {background-color: #405d27;
       border:2px solid #c1946a;
     color:#c1946a;
     width: 8vw;
     text-align:center;
     font-style:bold;
     font-size:20px;
-    font-family:"Monaco",Georgia,Serif;
+   
     }
-    .tabbable > .nav > li > a[data-value="Dados"] 
+    .tabbable > .nav > li > a[data-value="Dados"]
       {background-color: #405d27;
       border:2px solid #c1946a;
     color:#c1946a;
     width: 8vw;
     text-align:center;
     font-size:20px;
-    font-family:"Monaco",Georgia,Serif;
+    
       }
-      .tabbable > .nav > li > a[data-value="README"] 
-      {background-color: white; 
+      .tabbable > .nav > li > a[data-value="README"]
+      {background-color: white;
       border:2px solid #c1946a;
     color:#c1946a;
     width: 8vw;
     text-align:center;
     font-style:bold;
     font-size:20px;
-    font-family:"Monaco",Georgia,Serif;
-    }
+    
+      }
+    
   '))),
-  
-  # Sidebar with a slider input for number of bins 
+
+  # Sidebar with brief description of dashboard utilities and input choices
     sidebarLayout(
       
         sidebarPanel(
-          h4("O que é e como utilizar?"),
-          style = '
-          border-radius: 15px 50px 30px;
-          border:2px solid #405d27;
-          font-family:"Monaco",Georgia,Serif;
-          padding-top:30px;
-          padding-bottom:10px;
-          font-size: 15px;',
-
-          helpText("O dashboard oferece uma vizualização interativa da distribuição espacial nas Unidades Federativas do Brasil das taxas de mortalidade padronizadas por sexo e feixa etária
-                   de acordo com as causas básicas agrupadas nos capítulos do CID-10. 
-                   Para saber mais a respeito do processo de construção, clique na aba 'READme' do painel.
+          h4("What is it and how to use it?"),
+          helpText("The dashboard offers an interactive visualization of the spatial distribution in the Federative Units of Brazil of the mortality rates standardized by sex and age group,
+                   according to the basic causes grouped in the chapters of the ICD-10.
+                   To learn more about the build process, click on the 'READme' tab of the panel.
                   
-                   Para criar um mapa específico:
-                   Selecione um ano, o tipo de taxa (padronizada ou bruta) e o capítulo do CID-10 de interesse."),
+                   To create a specific map:
+                   Select a year, rate type (standardized or gross), and the ICD-10 chapter of interest."),
           selectInput("year",
-                      "Ano:", selected = "2019",
+                      "Year od death:", 
+                      selected = "2019",
                       choices = c('2010','2011','2012','2013','2014','2015','2016','2017','2018','2019')),
           selectInput("taxa",
-                      "Taxa:",
-                      choices = c('Padronizada', 'Bruta')),
+                      "Rate:",
+                      choices = c('Standardized', 'Crude')),
           prettyRadioButtons("cid",
-                             'Causa básica por Capítulo (CID-10):',
+                             'Basic Cause by Chapter (ICD-10):',
                             choices = unique(obts_clean$ICD_chapter),
                              shape = "square",
                              status = 'warning',
                              bigger = T,
                              animation = "smooth")),
         
-        # Show a plot of the generated distribution
         mainPanel(
-          
           tabsetPanel(
-            tabPanel("Mapa",
-                     plotOutput("map1", width = "100%", height = "900px")),
-            tabPanel("Dados", tableOutput("table1")),
+            tabPanel("Map",
+                    leafletOutput("map1", 
+                                  width = "100%", 
+                                  height = "900px")),
+            tabPanel("Data", 
+                     tableOutput("table1")),
             tabPanel("README", 
                      includeMarkdown("README.md"))
           )
@@ -183,19 +180,19 @@ server <- function(input, output) {
       df2() %>%
         group_by(UF) %>%
         PHEindicatormethods::phe_dsr(
-          x = Deaths,                 # column with observed number of events
-          n = pop.x,             # column with non-standard pops for each stratum
-          stdpop = pop.y,               # standard populations for each stratum
+          x = Deaths,                
+          n = pop.x,            
+          stdpop = pop.y,              
           stdpoptype = "field") %>%
-        mutate(Bruta = total_count/total_pop * 100000)%>%
-        rename(Padronizada = value)
+        mutate(Crude = total_count/total_pop * 100000)%>%
+        rename(Standardized = value)
     )
   
   output$table1 <- renderTable({
     mortality_ds_rate_phe() %>%
       rename(Obitos = 'total_count',
              Populacao = 'total_pop') %>%
-      select(c(UF,Obitos,Populacao,Bruta,Padronizada))
+      select(c(UF,Obitos,Populacao,Crude,Standardized))
   })
   
   map <- reactive(
@@ -204,37 +201,48 @@ server <- function(input, output) {
                            breaks = c(quantile(get(input$taxa), by = 0.2, na.rm = T))))
     )
   
- 
- 
-  ## Mapa
-  
-  # Paleta de cores da gradação de taxas de mortaldiade
-  
-  pal <- hcl.colors(5, "Heat", rev = TRUE, alpha = 0.7)
-  
-  output$map1 <- renderPlot({
+   pal <- reactive(
+     colorFactor(
+     palette = 'YlOrRd',
+     domain = map()$inc_cat)
+   )
+
+   labels <- reactive(
+     paste0("<strong>",map()$NM_UF,"</strong><br/>",
+            "Standardized Rate: ", round(map()$Padronizada,1),"<br/>",
+            "Crude Rate: ", round(map()$Bruta,1)
+   ) %>% lapply(htmltools::HTML)
+   )
+   
+   
+  output$map1 <- renderLeaflet({
     
-    ggplot(map()) +
-      geom_sf(aes(fill = inc_cat),
-              color = "black",
-              lwd = 0.35) + 
-      ggtitle(paste0("Taxa de mortalidade ",input$taxa ," por ", input$cid, " em ", input$year))+
-      labs(fill = "", x="", y ="")+
-      scale_fill_manual(values = pal,
-                        drop = FALSE,
-                        na.value = "#c1946a")+
-      geom_sf_label(aes(label = round(get(input$taxa),1)), colour = "black", na.rm = T, size = 4)+
-      coord_sf()+
-      theme_bw()+
-      theme(plot.title = element_text(size = 20, hjust = 0.5),
-            legend.position = "left",
-            legend.direction = "vertical",
-            legend.text = element_text(size = 15),
-            panel.border = element_rect(colour = "#405d27", fill=NA, size=2),
-            axis.text.x = element_text(size = 10),
-            axis.text.y = element_text(size = 10))
-    
+    leaflet(map()) %>%
+      addProviderTiles("MapBox", options = providerTileOptions(
+        id = "mapbox.light")) %>%
+      setView(lng =-52.9500 ,lat = -10.6500, zoom = 5) %>%
+      addPolygons(
+        fillColor = ~pal()(inc_cat),
+        weight = 2,
+        opacity = 1,
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        highlightOptions = highlightOptions(
+          weight = 5,
+          color = "#666",
+          dashArray = "",
+          fillOpacity = 0.7,
+          bringToFront = TRUE),
+        label = labels(),
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto")) %>%
+       addLegend(values = map()$inc_cat,pal = pal(), opacity = 0.7, title = NULL,
+                position = "topleft")
   })
+  
 }
 
 # Run the application 
