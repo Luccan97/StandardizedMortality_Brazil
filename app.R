@@ -105,6 +105,7 @@ ui <- fluidPage(
     sidebarLayout(
       
         sidebarPanel(
+          width = 5,
           h4("What is it and how to use it?"),
           helpText("The dashboard offers an interactive visualization of the spatial distribution in the Federative Units of Brazil of the mortality rates standardized by sex and age group,
                    according to the basic causes grouped in the chapters of the ICD-10.
@@ -127,7 +128,7 @@ ui <- fluidPage(
                              bigger = T,
                              animation = "smooth")),
         
-        mainPanel(
+        mainPanel(width = 7,
           tabsetPanel(
             tabPanel("Map",
                     leafletOutput("map1", 
