@@ -1,21 +1,31 @@
+# 00_prepareData.R
 
-install.packages("remotes")
-remotes::install_github("rfsaldanha/microdatasus")
+# We will need to run this script just one time, after we need to pull to GitHub
+# repository.
+
+#remotes::install_github("rfsaldanha/microdatasus")
 
 library(microdatasus)
 library(tidyverse)
 library(stringi)
 library(sf)
-# Creating Mortality standarized rate, UF, sex age.
-# data1
-# data2
-# data3
 
+# Standarized Mortality Rate Dashboard
+# To build the standarized mortality rate for the States of Brazil
+# Between the years of 2010 and 2019 we will need thre datasets
+# data1 (standard_pop)
+# The first dataset is the  World Standard Population by Sex and Age 
+# data2 (obts)
+# The second dataset is from the Mortality Sisyem Information 
+# data3 (pop_t)
+# The third one is the estimated populations for each State
+
+# In this script we are organizaing, reshaping the datasets so they are matchable
 
 # World Standard Population by Sex and Age data
 standard_pop <- vroom::vroom("https://www.opendata.nhs.scot/dataset/4dd86111-7326-48c4-8763-8cc4aa190c3e/resource/2f493d21-fd39-48f9-ad6a-9b2c95b32e30/download/world_standard_population_by_sex.csv")
 
-## Cleaning agegroup variable, changings patterns of categorical variables
+## Cleaning agegroup variable, renaming,changings patterns of categorical variables
 standard_pop_clean <- standard_pop %>%
   mutate(
     AgeGroup = str_replace_all(AgeGroup, "years", ""),
@@ -27,22 +37,26 @@ standard_pop_clean <- standard_pop %>%
                          Sex == "Female" ~ "f"))
 
 # Death data.
-# Dados SIM de 2010 a 2019 em todos os Estados.
-dados <- fetch_datasus(year_start = 2010, year_end = 2019,
-                         information_system = "SIM-DO", 
-                         vars = c('CODMUNRES', 'DTOBITO','SEXO','CAUSABAS_O','IDADE'))
+# data from all Brazilian States between 2010 and 2019
+# Here we use this function fecht_datasus from the package microdatsus
+# specially made for importing Brazilian Public health data
 
-# Processar gera dados com Informações espaciais do municipio de residência e idade em anos.
-# CID da Causa básica.
-dados <- process_sim(dados)
+obts <- fetch_datasus(year_start = 2010,
+                      year_end = 2019,
+                      # Selection of information system
+                      information_system = "SIM-DO", 
+                      # Selection variables of interest
+                      vars = c('CODMUNRES', 'DTOBITO','SEXO','CAUSABAS_O','IDADE'))
 
-# Tidying data 
+# Geoprocessing
+obts <- process_sim(obts)
+
+# Tidying 
 # Create variable year
 # Create variable agegroups
 # Group by year, sex, agegroup, UF, CID
 # Create variable with ICD chapter (first letter)
-
-obts <- dados %>%
+obts <- obts %>%
   select(DTOBITO, SEXO, IDADEanos, CAUSABAS_O, munResUf) %>%
   filter(SEXO != "0") %>%
   replace(is.na(.), 0) %>%
@@ -109,7 +123,6 @@ obts_clean <- obts %>%
 
 ###### Population data
 library(readxl)
-
 pop_t <- read_excel("data/ProjMunic-2010_2030.xlsx", 
                     col_types = c("numeric", "text", "text", 
                                   "skip", "skip", "numeric", "numeric", 
@@ -138,15 +151,17 @@ pop_t_clean <- pop_t %>%
   summarise(pop = sum(pop)) %>%
   mutate(UF = stri_trans_general(str_to_title(UF), id = "Latin-ASCII"))
 
-# UF shapefile
+# UF shapefile for the interative map
+
 UF_shp <- read_sf("data/BR_UF_2020.shp") %>%
   mutate(NM_UF = stri_trans_general(str_to_title(NM_UF), id = "Latin-ASCII")) %>%
   sf::st_transform('+proj=longlat +datum=WGS84')
 
-# Manter apenas as bases limpas e salvar em RData.
+# Keep the clean data and save them in csv format. 
+# Except UF_shp, this one we save in RDS format.
 rm(list=setdiff(ls(), c("obts_clean", "pop_t_clean", "standard_pop_clean", "UF_shp")))
 
-write.csv(obts_clean, "dara/obts_clean.csv",row.names = F)
+write.csv(obts_clean, "data/obts_clean.csv",row.names = F)
 write.csv(standard_pop_clean, "data/standard_pop_clean.csv",row.names = F)
 write.csv(pop_t_clean, "data/pop_t_clean.csv",row.names = F)
 #write_sf(UF_shp, "UF_shp.shp")

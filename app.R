@@ -1,53 +1,43 @@
 #
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
+# This is a Shiny web application
+# Made by Lucca Nielsen
 #
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+# Github Project:https://github.com/Luccan97/StandardizedMortality_Brazil
 
 
+# Packages
 library(shiny)
 library(shinydashboardPlus)
 library(shinyWidgets)
 library(leaflet)
 library(tidyverse)
 library(sf)
-library(ggrepel)
 library(bslib)
-  
 
+
+# Reading the cleaned datasets from github repo  
+
+# deaths
 obts_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/obts_clean.csv", 
                        col_types = cols(Sex = col_character()), 
                        locale = locale(encoding = "ISO-8859-1"))
 
-
+# The shp file needs a diferent process, we need to download them first...
 githubURL <- ("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/UF_shp.RDS")
 download.file(githubURL,"UF_shp.rds", method="curl")
 UF_shp <- readRDS("UF_shp.rds")
 
-
+# population
 pop_t_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/pop_t_clean.csv")
 
+# standard population
 standard_pop_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/standard_pop_clean.csv")
 
-# i18n <- Translator$new(translation_json_path='translations/translation.json')
-# i18n$set_translation_language('en')
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
+  # overall theme
   theme = bs_theme(bootswatch = 'yeti'),
   
-  # shiny.i18n::usei18n(i18n),
-  # tags$div(
-  #   style='float: right;',
-  #   selectInput(
-  #     inputId='selected_language',
-  #     label=i18n$t('Change language'),
-  #     choices = i18n$get_languages(),
-  #     selected = i18n$get_key_translation()
-  #   )),
-  ## Stlysh CSS
   
   h1(id="tag1", "Open data <> Free knowledge <> Public Health."),
   
@@ -55,6 +45,8 @@ ui <- fluidPage(
 
   tags$head(
     tags$style(HTML(
+      
+      # CSS styling some features
       '#tag1 {color: white;
                   background-color:#405d27;
                   border:2px solid #c1946a;
@@ -77,7 +69,7 @@ ui <- fluidPage(
                   padding-bottom:10px;
                  
     }
-    .tabbable > .nav > li > a[data-value="Mapa"]
+    .tabbable > .nav > li > a[data-value="Map"]
       {background-color: #405d27;
       border:2px solid #c1946a;
     color:#c1946a;
@@ -87,7 +79,7 @@ ui <- fluidPage(
     font-size:20px;
    
     }
-    .tabbable > .nav > li > a[data-value="Dados"]
+    .tabbable > .nav > li > a[data-value="Data"]
       {background-color: #405d27;
       border:2px solid #c1946a;
     color:#c1946a;
@@ -119,9 +111,9 @@ ui <- fluidPage(
                    To learn more about the build process, click on the 'READme' tab of the panel.
                   
                    To create a specific map:
-                   Select a year, rate type (standardized or gross), and the ICD-10 chapter of interest."),
+                   Select a year, rate type (standardized or crude), and the ICD-10 chapter of interest."),
           selectInput("year",
-                      "Year od death:", 
+                      "Year:", 
                       selected = "2019",
                       choices = c('2010','2011','2012','2013','2014','2015','2016','2017','2018','2019')),
           selectInput("taxa",
@@ -150,13 +142,9 @@ ui <- fluidPage(
     ))
   
 
-# Define server logic required to draw a histogram
+# Define server logic 
 server <- function(input, output) {
-  
-  # observeEvent(input$selected_language, {
-  #   update_lang(session, input$selected_language)
-  # })
-  
+
   obts1 <- reactive({
     obts_clean %>%
       filter(Year == input$year & ICD_chapter == input$cid)
@@ -175,6 +163,7 @@ server <- function(input, output) {
     left_join(df1(), standard_pop_clean, by = c('Sex', 'agegroup'))
   )
   
+  # Calculating standarized rates based on R Epi handbook lesson
   mortality_ds_rate_phe <- 
     reactive(
       df2() %>%
@@ -209,18 +198,21 @@ server <- function(input, output) {
 
    labels <- reactive(
      paste0("<strong>",map()$NM_UF,"</strong><br/>",
-            "Standardized Rate: ", round(map()$Padronizada,1),"<br/>",
-            "Crude Rate: ", round(map()$Bruta,1)
+            "Standardized Rate: ", round(map()$Standardized,1),"<br/>",
+            "Crude Rate: ", round(map()$Crude,1)
    ) %>% lapply(htmltools::HTML)
    )
    
    
   output$map1 <- renderLeaflet({
     
+    # Thats out leaflet map
     leaflet(map()) %>%
       addProviderTiles("MapBox", options = providerTileOptions(
         id = "mapbox.light")) %>%
-      setView(lng =-52.9500 ,lat = -10.6500, zoom = 5) %>%
+      # set view
+      setView(lng =-52.9500 ,lat = -10.6500, zoom = 4.5) %>%
+      # Polygons
       addPolygons(
         fillColor = ~pal()(inc_cat),
         weight = 2,
@@ -239,6 +231,7 @@ server <- function(input, output) {
           style = list("font-weight" = "normal", padding = "3px 8px"),
           textsize = "15px",
           direction = "auto")) %>%
+      # Legend
        addLegend(values = map()$inc_cat,pal = pal(), opacity = 0.7, title = NULL,
                 position = "topleft")
   })
