@@ -47,7 +47,24 @@ ui <- fluidPage(
     tags$style(HTML(
       
       # CSS styling some features
-      '#tag1 {color: white;
+      "#
+      plot-container {
+  position: relative;
+}
+#loading-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  margin-top: -33px;  /* half of the spinner's height */
+  margin-left: -33px; /* half of the spinner's width */
+}
+#plot.recalculating {
+  z-index: -2;
+}
+      
+      
+      #tag1 {color: white;
                   background-color:#405d27;
                   border:2px solid #c1946a;
                   border-radius: 15px 50px 30px;
@@ -69,7 +86,7 @@ ui <- fluidPage(
                   padding-bottom:10px;
                  
     }
-    .tabbable > .nav > li > a[data-value="Map"]
+    .tabbable > .nav > li > a[data-value='Map']
       {background-color: #405d27;
       border:2px solid #c1946a;
     color:#c1946a;
@@ -79,7 +96,7 @@ ui <- fluidPage(
     font-size:20px;
    
     }
-    .tabbable > .nav > li > a[data-value="Data"]
+    .tabbable > .nav > li > a[data-value='Data']
       {background-color: #405d27;
       border:2px solid #c1946a;
     color:#c1946a;
@@ -88,7 +105,7 @@ ui <- fluidPage(
     font-size:20px;
     
       }
-      .tabbable > .nav > li > a[data-value="README"]
+      .tabbable > .nav > li > a[data-value='README']
       {background-color: white;
       border:2px solid #c1946a;
     color:#c1946a;
@@ -99,7 +116,7 @@ ui <- fluidPage(
     
       }
     
-  '))),
+  "))),
 
   # Sidebar with brief description of dashboard utilities and input choices
     sidebarLayout(
@@ -131,9 +148,13 @@ ui <- fluidPage(
         mainPanel(width = 7,
           tabsetPanel(
             tabPanel("Map",
-                    leafletOutput("map1", 
-                                  width = "100%", 
-                                  height = "900px")),
+                     div(
+                       id = "plot-container",
+                       tags$img(src = "spinner.gif",
+                                id = "loading-spinner"),
+                       leafletOutput("map1", 
+                                     width = "100%", 
+                                     height = "900px"))),
             tabPanel("Data", 
                      tableOutput("table1")),
             tabPanel("README", 
