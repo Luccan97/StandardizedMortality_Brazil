@@ -27,6 +27,8 @@ githubURL <- ("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_
 download.file(githubURL,"UF_shp.rds", method="curl")
 UF_shp <- readRDS("UF_shp.rds")
 
+UF_shp <- sf::st_simplify(UF_shp)
+
 # population
 pop_t_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/pop_t_clean.csv")
 
