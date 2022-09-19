@@ -155,7 +155,8 @@ pop_t_clean <- pop_t %>%
 
 UF_shp <- read_sf("data/BR_UF_2020.shp") %>%
   mutate(NM_UF = stri_trans_general(str_to_title(NM_UF), id = "Latin-ASCII")) %>%
-  sf::st_transform('+proj=longlat +datum=WGS84')
+  sf::st_transform('+proj=longlat +datum=WGS84') %>%
+  sf::st_simplify(UF_shp, dTolerance = 20000)
 
 # Keep the clean data and save them in csv format. 
 # Except UF_shp, this one we save in RDS format.
