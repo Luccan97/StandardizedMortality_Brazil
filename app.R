@@ -27,7 +27,7 @@ githubURL <- ("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_
 download.file(githubURL,"UF_shp.rds", method="curl")
 UF_shp <- readRDS("UF_shp.rds")
 
-UF_shp <- sf::st_simplify(UF_shp)
+
 
 # population
 pop_t_clean <- read_csv("https://raw.githubusercontent.com/Luccan97/StandardizedMortality_Brazil/main/data/pop_t_clean.csv")
@@ -124,7 +124,7 @@ ui <- fluidPage(
     sidebarLayout(
       
         sidebarPanel(
-          width = 5,
+          width = 6,
           h4("What is it and how to use it?"),
           helpText("The dashboard offers an interactive visualization of the spatial distribution in the Federative Units of Brazil of the mortality rates standardized by sex and age group,
                    according to the basic causes grouped in the chapters of the ICD-10.
@@ -147,7 +147,7 @@ ui <- fluidPage(
                              bigger = T,
                              animation = "smooth")),
         
-        mainPanel(width = 7,
+        mainPanel(width = 6,
           tabsetPanel(
             tabPanel("Map",
                      div(
