@@ -39,4 +39,5 @@ my [Linkedin](https://www.linkedin.com/in/lucca-nielsen-53b2a9181/)
 # References
 
 SALDANHA, Raphael de Freitas; BASTOS, Ronaldo Rocha; BARCELLOS, Christovam. Microdatasus: pacote para download e pré-processamento de microdados do Departamento de Informática do SUS (DATASUS). Cad. Saúde Pública, Rio de Janeiro , v. 35, n. 9, e00032419, 2019 . Available from http://ref.scielo.org/dhcq3y.
+
 Batra, Neale, et al. The Epidemiologist R Handbook. 2021. DOI
