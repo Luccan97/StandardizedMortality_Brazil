@@ -3,8 +3,9 @@
 ### What is it?
 Dash link: https://6c6yvn-lucca0nielsen.shinyapps.io/StandardizedMortality_Brazil/
 
-The dashboard offers an interactive visualization of the spatial distribution in the Federative Units of Brazil of the mortality rates standardized by sex and age group
-according to the basic causes  of death grouped in the chapters of the ICD-10.
+The dashboard offers an interactive visualization on the spatial distribution of the mortality rates standardized by sex and age group
+according to the basic causes  of death grouped in the chapters of the ICD-10 in the Federative Units of Brazil. 
+
 
 ### Why is it important to standardize mortality rates?
 Mortality rates are indicators widely used to diagnose the health context of certain places and periods. Understanding the underlying cause of death of populations helps to understand their context and specific characteristics in relation to the way of life and interactions with health determinants and health services.
