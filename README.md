@@ -20,7 +20,7 @@ The standard population used in the construction of this dashboard can be found 
 ### Mortality Data from the Mortality Information System (SIM)
 The mortality data were downloaded in the RStudio IDE through the microdatasus package, github with more information can be found [here](https://github.com/rfsaldanha/microdatasus).
 
-The variables used were: Municipality of residence of death, age in years, year of death and underlying cause.
+The variables used were: Municipality of residence, age in years, year of death and underlying cause.
 The underlying causes were reclassified and grouped by ICD-10 chapters.
 
 ### The annual population bases of the Federative Units
