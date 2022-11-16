@@ -3,7 +3,7 @@
 ### What is it?
 Dash link: https://6c6yvn-lucca0nielsen.shinyapps.io/StandardizedMortality_Brazil/
 
-The dashboard offers an interactive visualization on the spatial distribution of the mortality rates standardized by sex and age group
+The dashboard offers an interactive visualization on the mortality rates standardized by sex and age group
 according to the basic causes  of death grouped in the chapters of the ICD-10 in the Federative Units of Brazil. 
 
 
